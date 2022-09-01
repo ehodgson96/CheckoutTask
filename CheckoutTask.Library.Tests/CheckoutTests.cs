@@ -97,6 +97,15 @@ namespace CheckoutTask.Library.Tests
             Assert.AreEqual(160, output);
         }
 
+        [Test]
+        public void CheckForIncorrectInput([Values("", " ", "H","X","AA")] string input)
+        {
+            Checkout.SetupItemList();
+            Checkout.Scan(input);
+            int output = Checkout.GetTotalPrice();
+            Assert.AreEqual(0, output);
+        }
+
 
 
     }

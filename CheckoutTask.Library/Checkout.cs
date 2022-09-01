@@ -67,7 +67,8 @@ namespace CheckoutTask.Library
         /// <param name="input"></param>
         public static void Scan(string input)
         {
-            purchaseList.Add(char.Parse(input));
+            if(SKUList.Exists(x =>x.itemName == input)) //Check input value is same as one of the set SKU
+                purchaseList.Add(char.Parse(input));
         }
 
         /// <summary>
