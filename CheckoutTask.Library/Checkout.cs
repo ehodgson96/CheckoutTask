@@ -15,13 +15,15 @@ namespace CheckoutTask.Library
 
         private static List<shoppingItem> SKUList = new List<shoppingItem>();
 
-        private static int totalCost = 0;
+        private static List<char> purchaseList = new List<char>();
 
         /// <summary>
         /// This is to set up the item pricing and offers avaiable. Add to this if more items are needed
         /// </summary>
         public static void SetupItemList()
         {
+            SKUList = new List<shoppingItem>();
+            
             shoppingItem AItem = new shoppingItem
             {
                 itemName = "A",
@@ -65,9 +67,7 @@ namespace CheckoutTask.Library
         /// <param name="input"></param>
         public static void Scan(string input)
         {
-            
-            totalCost += SKUList.Find(n => n.itemName == input).price;
-
+            purchaseList.Add(char.Parse(input));
         }
 
         /// <summary>
@@ -76,9 +76,51 @@ namespace CheckoutTask.Library
         /// <returns></returns>
         public static int GetTotalPrice()
         {
-            int finalPrice = totalCost;
-            totalCost = 0;
+            int finalPrice = 0;
+            foreach (var item in SKUList)
+            {
+                int scannedCount = purchaseList.FindAll(n => n.ToString().ToUpper() == item.itemName).Count;
+                if (scannedCount > 0)
+                {
+                    int totalItemPrice = GetItemPrice(scannedCount, item);
+                    finalPrice += totalItemPrice;
+                }
+            }
+            
+            purchaseList.Clear(); //Clear list for next Checkout
+
             return finalPrice;
+        }
+
+        /// <summary>
+        /// Get the total value from the individual SKU items
+        /// </summary>
+        /// <param name="scannedCount">count of the scanned items</param>
+        /// <param name="item">item variables</param>
+        /// <returns></returns>
+        static int GetItemPrice(int scannedCount, shoppingItem item)
+        {
+
+            int totalPrice = 0;
+            if (item.offerNum > 0)
+            {
+                int offerCount = scannedCount / item.offerNum;
+
+                int normalPriceCount = (scannedCount % item.offerNum);
+
+                int totalOfferPrice = offerCount * item.offerPrice;
+
+                int totalNormalPrice = normalPriceCount * item.price;
+
+                totalPrice = totalOfferPrice + totalNormalPrice;
+
+            }
+            else
+            {
+                totalPrice = (scannedCount * item.price);
+
+            }
+            return totalPrice;
         }
     }
 }
