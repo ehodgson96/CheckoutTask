@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 
 namespace CheckoutTask.Library.Tests
 {
@@ -10,85 +11,50 @@ namespace CheckoutTask.Library.Tests
         }
 
         [Test]
-        public void Get50FromA()
+        public void GetBasePriceFromSingleInput([Values("A", "B", "C", "D")] string input)
         {
-            string input = "A";
-            Checkout.SetupItemList();
+            Checkout.SetupDefaultItemList();
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
-            Assert.AreEqual(50,output);
+            int basePrice = Checkout.GetBasePrice(input);
+            Assert.AreEqual(basePrice, output);
         }
 
         [Test]
-        public void Get30FromB()
+        public void GetOfferPriceFromMinimumOfferInput([Values("A", "B", "C", "D")] string input)
         {
-            string input = "B";
-            Checkout.SetupItemList();
-            Checkout.Scan(input);
+            Checkout.SetupDefaultItemList();
+            int minimumAmountForOffer = Checkout.GetMinimumOffer(input);
+            for (int i = 0; i < minimumAmountForOffer; i++)
+            {
+                Checkout.Scan(input);
+            }
+
             int output = Checkout.GetTotalPrice();
-            Assert.AreEqual(30, output);
+
+            int offerPrice = Checkout.GetOfferPrice(input);
+            Assert.AreEqual(offerPrice, output);
         }
 
-        [Test]
-        public void Get20FromC()
-        {
-            string input = "C";
-            Checkout.SetupItemList();
-            Checkout.Scan(input);
-            int output = Checkout.GetTotalPrice();
-            Assert.AreEqual(20, output);
-        }
-
-        [Test]
-        public void Get15FromD()
-        {
-            string input = "D";
-            Checkout.SetupItemList();
-            Checkout.Scan(input);
-            int output = Checkout.GetTotalPrice();
-            Assert.AreEqual(15, output);
-        }
 
         [Test]
         public void Get100FromAA()
         {
             string input = "A";
-            Checkout.SetupItemList();
+            Checkout.SetupDefaultItemList();
             Checkout.Scan(input);
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
             Assert.AreEqual(100, output);
         }
 
-        [Test]
-        public void Get130FromAAA()
-        {
-            string input = "A";
-            Checkout.SetupItemList();
-            Checkout.Scan(input);
-            Checkout.Scan(input);
-            Checkout.Scan(input);
-            int output = Checkout.GetTotalPrice();
-            Assert.AreEqual(130, output);
-        }
-
-        [Test]
-        public void Get45FromBB()
-        {
-            string input = "B";
-            Checkout.SetupItemList();
-            Checkout.Scan(input);
-            Checkout.Scan(input);
-            int output = Checkout.GetTotalPrice();
-            Assert.AreEqual(45, output);
-        }
 
         [Test]
         public void GetOfferFromDifferentOrder()
         {
             string input = "A";
             string input2 = "B";
-            Checkout.SetupItemList();
+            Checkout.SetupDefaultItemList();
             Checkout.Scan(input);
             Checkout.Scan(input);
             Checkout.Scan(input2);
@@ -100,7 +66,7 @@ namespace CheckoutTask.Library.Tests
         [Test]
         public void CheckForIncorrectInput([Values("", " ", "H","X","AA")] string input)
         {
-            Checkout.SetupItemList();
+            Checkout.SetupDefaultItemList();
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
             Assert.AreEqual(0, output);

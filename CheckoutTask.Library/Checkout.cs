@@ -23,7 +23,64 @@ namespace CheckoutTask.Library
         public static void SetupItemList()
         {
             SKUList = new List<shoppingItem>();
-            
+            string SKUItems = "ABCD";
+            char[] SKUArray = SKUItems.ToCharArray();
+            Console.WriteLine("--------- PRICING RULES ---------");
+
+            foreach (var SKU in SKUArray)
+            {
+                shoppingItem NewSKUItem = new shoppingItem();
+                NewSKUItem.itemName = SKU.ToString();
+                Console.WriteLine("---------");
+                Console.WriteLine("Pricing Rules For SKU Item: " + NewSKUItem.itemName );
+
+                Console.WriteLine("Enter Base Price For SKU Item : ");
+                String Result = Console.ReadLine();
+                int price = CheckInputValues(Result);
+                NewSKUItem.price = price;
+
+                Console.WriteLine("Does this item have a special offer (y/n) : ");
+                string readLine = Console.ReadLine().ToUpper();
+                while(readLine != "Y"&& readLine != "N")
+                {
+                    Console.WriteLine("Incorrect Character entered. Please enter either y or n");
+                    readLine = Console.ReadLine();
+                }
+
+                if (readLine == "Y")
+                {
+                    Console.WriteLine("Enter Minumum Quantity of units to qualify for Offer: ");
+                    Result = Console.ReadLine();
+                    int offerNum = CheckInputValues(Result);
+                    NewSKUItem.offerNum = offerNum;
+
+                    Console.WriteLine("Enter Offer Price: ");
+                    Result = Console.ReadLine();
+                    int integerValue = CheckInputValues(Result);
+                    NewSKUItem.offerPrice = integerValue;
+
+                }
+                else
+                {
+                    NewSKUItem.offerNum = 0;
+                    NewSKUItem.offerPrice = 0;
+                }
+
+                SKUList.Add(NewSKUItem);
+
+            }
+            Console.WriteLine("-------------------------------");
+
+
+        }
+
+        /// <summary>
+        /// This is to set up the default item pricing and offers avaiable for testing.
+        /// </summary>
+        public static void SetupDefaultItemList()
+        {
+            SKUList = new List<shoppingItem>();
+
             shoppingItem AItem = new shoppingItem
             {
                 itemName = "A",
@@ -62,14 +119,47 @@ namespace CheckoutTask.Library
         }
 
         /// <summary>
+        /// This is used to check input values for the SKU pricing rules are integers
+        /// </summary>
+        /// <param name="readLine"></param>
+        /// <returns></returns>
+        private static int CheckInputValues(string readLine)
+        {
+            int integerValue = 0;
+            while (integerValue <= 0)
+            {
+                while (!Int32.TryParse(readLine, out integerValue))
+                {
+                    Console.WriteLine("Not a valid number, try again.");
+
+                    readLine = Console.ReadLine();
+                }
+
+                if (integerValue <= 0)
+                {
+                    Console.WriteLine("Please enter a value greater than 0");
+                    readLine = Console.ReadLine();
+                }
+            }
+            
+            return integerValue;
+        }
+
+        /// <summary>
         /// Scan an item and add the appropriate price to the total cost
         /// </summary>
         /// <param name="input"></param>
         public static void Scan(string input)
         {
-            if(SKUList.Exists(x =>x.itemName == input)) //Check input value is same as one of the set SKU
-                purchaseList.Add(char.Parse(input));
+            if (SKUItemExists(input.ToUpper())) //Check input value is same as one of the set SKU
+                purchaseList.Add(char.Parse(input.ToUpper()));
         }
+
+        public static bool SKUItemExists(string input)
+        {
+            return SKUList.Exists(x => x.itemName == input); //Check input value is same as one of the set SKU
+        }
+
 
         /// <summary>
         /// Get the final price from the scanned items
@@ -87,7 +177,7 @@ namespace CheckoutTask.Library
                     finalPrice += totalItemPrice;
                 }
             }
-            
+
             purchaseList.Clear(); //Clear list for next Checkout
 
             return finalPrice;
@@ -123,5 +213,36 @@ namespace CheckoutTask.Library
             }
             return totalPrice;
         }
+
+        /// <summary>
+        /// Gets the base price from input for testing purposes
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static int GetBasePrice(string input)
+        {
+            return SKUList.Find(x => x.itemName == input).price;
+        }
+
+        /// <summary>
+        /// Gets the base price from input for testing purposes
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static int GetMinimumOffer(string input)
+        {
+            return SKUList.Find(x => x.itemName == input).offerNum;
+        }
+
+        /// <summary>
+        /// Gets the base price from input for testing purposes
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static int GetOfferPrice(string input)
+        {
+            return SKUList.Find(x => x.itemName == input).offerPrice;
+        }
+
     }
 }
