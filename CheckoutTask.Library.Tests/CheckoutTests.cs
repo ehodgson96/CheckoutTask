@@ -13,6 +13,7 @@ namespace CheckoutTask.Library.Tests
         public void Get50FromA()
         {
             string input = "A";
+            Checkout.SetupItemList();
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
             Assert.AreEqual(50,output);
@@ -22,6 +23,7 @@ namespace CheckoutTask.Library.Tests
         public void Get30FromB()
         {
             string input = "B";
+            Checkout.SetupItemList();
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
             Assert.AreEqual(30, output);
@@ -31,6 +33,7 @@ namespace CheckoutTask.Library.Tests
         public void Get20FromC()
         {
             string input = "C";
+            Checkout.SetupItemList();
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
             Assert.AreEqual(20, output);
@@ -40,9 +43,23 @@ namespace CheckoutTask.Library.Tests
         public void Get15FromD()
         {
             string input = "D";
+            Checkout.SetupItemList();
             Checkout.Scan(input);
             int output = Checkout.GetTotalPrice();
             Assert.AreEqual(15, output);
         }
+
+        [Test]
+        public void Get100FromAA()
+        {
+            string input = "A";
+            Checkout.SetupItemList();
+            Checkout.Scan(input);
+            Checkout.Scan(input);
+            int output = Checkout.GetTotalPrice();
+            Assert.AreEqual(100, output);
+        }
+
+
     }
 }
