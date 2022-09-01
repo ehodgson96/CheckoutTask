@@ -2,7 +2,7 @@
 
 This Project is my resolution to tech task provided by BrightHR
 
-#The Task
+# The Task
 
 In a normal supermarket, things are identified using Stock Keeping Units, or SKUs. In our shop, we’ll use individual letters of the alphabet (A, B, C, and so on). Our goods are priced individually. In addition, some items are multipriced: buy n of them, and they’ll cost you y pounds. For example, item ‘A’ might cost 50 pounds individually, but this week we have a special offer: buy three ‘A’s and they’ll cost you 130. The current pricing and offers are as follows:
 SKU 	Unit Price 	Special Price
@@ -21,11 +21,11 @@ interface ICheckout
     int GetTotalPrice();
 }
 
-Instructions
+### Instructions
 
 Implement a class library that satisfies the problem described above. The solution should be test driven.
 
-#Final Comments
+# Final Comments
 
 This is the first time I have attempted to use the TDD Structure for solving a problem, so this took me longer than usual to complete the task.
 Towards the end I found it tricky to provide dynamic tests for the changing inputted SKU values, this was due to the tests being performed on pre set values and not from console.Readline
