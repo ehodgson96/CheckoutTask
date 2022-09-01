@@ -8,13 +8,21 @@ namespace CheckoutTask.Library
 
         public static void Scan(string input)
         {
-            totalCost += 50;
-
+            if (input == "A")
+                totalCost += 50;
+            if (input == "B")
+                totalCost += 30;
+            if (input == "C")
+                totalCost += 20;
+            if (input == "D")
+                totalCost += 15;
         }
 
         public static int GetTotalPrice()
         {
-            return totalCost;
+            int finalPrice = totalCost;
+            totalCost = 0;
+            return finalPrice;
         }
     }
 }
