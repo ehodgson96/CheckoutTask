@@ -10,9 +10,12 @@ namespace CheckoutTask.Library.Tests
         }
 
         [Test]
-        public void Test1()
+        public void Get50FromA()
         {
-            Assert.Pass();
+            string input = "A";
+            Checkout.Scan(input);
+            int output = Checkout.GetTotalPrice();
+            Assert.AreEqual(50,output);
         }
     }
 }
